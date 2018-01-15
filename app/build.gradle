@@ -1,0 +1,244 @@
+// Setup build script classpath
+
+buildscript {
+    ext.kotlin_version = "1.2.21"
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:3.0.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.4"
+    }
+}
+
+// Apply plugins
+
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
+apply plugin: "kotlin-kapt"
+apply plugin: "com.bmuschko.docker-remote-api"
+
+// Setup dependency repositories
+
+repositories {
+    google()
+    jcenter()
+}
+
+// Setup android plugin
+
+android {
+
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.gabrielhuff.sample.login"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // Add kotlin sources to all source sets
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
+    }
+
+    // Define flavor dimensions
+
+    flavorDimensions "luminance", "color", "data_access"
+    productFlavors {
+
+        // Luminance - The overall theme of the app
+
+        light { dimension "luminance"; manifestPlaceholders Luminance: "Light" }
+        dark { dimension "luminance"; manifestPlaceholders Luminance: "Dark" }
+
+        // Color - The primary color of the app
+
+        blueGrey { dimension "color"; manifestPlaceholders Color: "BlueGrey" }
+        cyan { dimension "color"; manifestPlaceholders Color: "Cyan" }
+        green { dimension "color"; manifestPlaceholders Color: "Green" }
+        indigo { dimension "color"; manifestPlaceholders Color: "Indigo" }
+        purple { dimension "color"; manifestPlaceholders Color: "Purple" }
+        teal { dimension "color"; manifestPlaceholders Color: "Teal" }
+
+        // Data access - The data access mode.
+        //
+        // - On `mocked`, all data will be mocked in memory, i.e. no interactions with databases or
+        //   network services. Ideal for testing as the context becomes more reproducible.
+        // - On `real`, all data is fetched / saved using real sources. This is the flavor used for
+        //   the 'usable' version of the app
+        // - `realLocalServer` is similar to `real`, but redirects any network communication to the
+        //   machine executing the build. This is useful for integration tests
+
+        mocked {
+            dimension "data_access"
+            buildConfigField "boolean", "MOCKED_DATA_ACCESS", "true"
+            buildConfigField "String", "SERVICE_URL", '""'
+        }
+        real {
+            dimension "data_access"
+            buildConfigField "boolean", "MOCKED_DATA_ACCESS", "false"
+            buildConfigField "String", "SERVICE_URL", '"http://default-environment.hwdbtmcsww.us-east-2.elasticbeanstalk.com"'
+        }
+        realLocalServer {
+            dimension "data_access"
+            buildConfigField "boolean", "MOCKED_DATA_ACCESS", "false"
+            buildConfigField "String", "SERVICE_URL", "\"http://${getLocalIP()}:8080\""
+        }
+    }
+
+    // Filter release variant. We are only using one flavor with the release build type
+
+    variantFilter { if (it.buildType.name == "release") setIgnore(it.name != "lightTealRealRelease") }
+}
+
+// Setup dependencies
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:26.1.0"
+    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.8"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.0.0"
+    implementation "com.wang.avi:library:2.1.3"
+    implementation "com.google.dagger:dagger:2.14.1"
+    implementation "com.github.kittinunf.fuel:fuel:1.12.0"
+    implementation "com.github.kittinunf.fuel:fuel-rxjava:1.12.0"
+    implementation "com.github.kittinunf.fuel:fuel-gson:1.12.0"
+
+    kapt "com.google.dagger:dagger-compiler:2.14.1"
+
+    testImplementation "junit:junit:4.12"
+    testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    testImplementation "com.winterbe:expekt:0.5.0"
+
+    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
+}
+
+// Setup Docker flow. When running `startLocalServer`, we are:
+//
+// - Pulling the server image from the registry (in this case Docker Hub)
+// - Creating a container from the fetched image
+// - Starting the created container
+// - Waiting until the application withing the container is ready
+//
+// Also, when running `stopLocalServer`, we are:
+//
+// - Stopping the server container (if running)
+// - Removing the stopped container
+
+import com.bmuschko.gradle.docker.tasks.image.DockerPullImage
+import com.bmuschko.gradle.docker.tasks.DockerVersion
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
+
+ext.serverContainerName = "com.gabrielhuff.sample.login.server"
+
+// We are not doing anything with the version here. This task is only being used to ensure that
+// docker is running on the local machine whenever we try do do anything Docker related
+task checkDockerAvailable(type: DockerVersion) {
+
+    onError {
+        throw new GradleException("Docker not available. Make sure that Docker is installed and " +
+                "running. You can find installation instructions here: https://docs.docker.com/engine/installation/")
+    }
+}
+
+task pullServerImage(type: DockerPullImage) {
+    dependsOn checkDockerAvailable
+    repository = "gabrielhuff/sample-login"
+    tag = "1.0"
+}
+
+task createServerContainer(type: DockerCreateContainer) {
+    dependsOn pullServerImage
+    containerName = serverContainerName
+    targetImageId { pullServerImage.imageId }
+    portBindings = ["8080:8080"]
+}
+
+task startServerContainer(type: DockerStartContainer) {
+    dependsOn createServerContainer
+    containerId = serverContainerName
+}
+
+task waitServerContainerStartup(type: DockerWaitHealthyContainer) {
+    dependsOn startServerContainer
+    timeout = 60
+    containerId = serverContainerName
+}
+
+task stopServerContainer(type: DockerStopContainer) {
+    dependsOn checkDockerAvailable
+    containerId = serverContainerName
+}
+
+task removeServerContainer(type: DockerRemoveContainer) {
+    dependsOn stopServerContainer
+    containerId = serverContainerName
+}
+
+task startLocalServer(group: "localserver") {
+    dependsOn checkDockerAvailable
+    dependsOn waitServerContainerStartup
+}
+
+task stopLocalServer(group: "localserver") {
+    dependsOn removeServerContainer
+}
+
+// Once android variant tasks are available, automatically start / stop docker container when
+// testing 'realLocalServer' variants
+
+afterEvaluate {
+    tasks.findAll { it.name ==~ /^connected\w*RealLocalServer\w*AndroidTest$/ }
+            .each { it.dependsOn startLocalServer }
+            .each { it.finalizedBy stopLocalServer }
+}
+
+// Utility
+
+/**
+ * Get the local IP of the machine executing the build. We are using this in order to allow the app
+ * to communicate with a server container running on the same machine.
+ *
+ * The implementation was copied from: http://jeremie-martinez.com/2015/05/05/inject-host-gradle/
+ */
+static String getLocalIP() {
+    InetAddress result = null
+    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces()
+    while (interfaces.hasMoreElements()) {
+        Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses()
+        while (addresses.hasMoreElements()) {
+            InetAddress address = addresses.nextElement()
+            if (!address.isLoopbackAddress()) {
+                if (address.isSiteLocalAddress()) {
+                    return address.getHostAddress()
+                } else if (result == null) {
+                    result = address
+                }
+            }
+        }
+    }
+    return (result != null ? result : InetAddress.getLocalHost()).getHostAddress()
+}

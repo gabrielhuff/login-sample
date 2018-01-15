@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="?android:colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/heading"
+        style="@style/TextView.Heading.Inverse"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center"
+        android:text="@string/Profile" />
+
+    <ScrollView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <ImageView
+                android:src="@drawable/ic_person_inverse_96dp"
+                android:contentDescription="@null"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/username"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="test_user"/>
+
+            <TextView
+                android:text="@string/You_are_logged_in_Since_this_is_a_mere_sample_theres_not_much_to_do_here_But_hey_it_works"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:gravity="center"
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/Skills"
+                style="@style/TextView.Heading"
+                android:textColor="?android:textColorPrimaryInverse" />
+
+            <include
+                android:id="@+id/skillRxJava"
+                layout="@layout/logged_in_skill" />
+
+            <include
+                android:id="@+id/skillDocker"
+                layout="@layout/logged_in_skill" />
+
+            <include
+                android:id="@+id/skillKotlin"
+                layout="@layout/logged_in_skill" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="20dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/logout"
+        style="@style/Button.Inverse.Background"
+        android:text="@string/Log_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp" />
+
+</LinearLayout>

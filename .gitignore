@@ -1,0 +1,18 @@
+# IDEA
+
+.idea
+*.iml
+
+## Android
+
+captures
+
+# Gradle
+
+.gradle
+build
+local.properties
+
+# Misc
+
+.DS_Store

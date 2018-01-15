@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <TextView
+        android:id="@+id/heading"
+        style="@style/TextView.Heading"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center"
+        android:text="@string/Sign_up" />
+
+    <ImageButton
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_close_primary_24dp"
+        android:contentDescription="@string/Close"
+        app:layout_constraintTop_toTopOf="@id/heading"
+        app:layout_constraintLeft_toLeftOf="@id/heading"
+        app:layout_constraintBottom_toBottomOf="@id/heading" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress"
+        style="@style/LoadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heading"
+        android:animateLayoutChanges="true">
+
+        <LinearLayout
+            android:id="@+id/inputs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/Skills"
+                android:textColor="?android:colorPrimary" />
+
+            <include
+                android:id="@+id/skillRxJava"
+                layout="@layout/sign_up_skill" />
+
+            <include
+                android:id="@+id/skillDocker"
+                layout="@layout/sign_up_skill" />
+
+            <include
+                android:id="@+id/skillKotlin"
+                layout="@layout/sign_up_skill" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/Credentials"
+                android:textColor="?android:colorPrimary" />
+
+            <EditText
+                android:id="@+id/username"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/ic_person_primary_24dp"
+                android:hint="@string/Username"
+                android:inputType="textVisiblePassword|textNoSuggestions"
+                android:imeOptions="actionNext"
+                android:maxLength="16" />
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/ic_password_primary_24dp"
+                android:hint="@string/Password"
+                android:inputType="textPassword"
+                android:imeOptions="actionNext"
+                android:maxLength="16" />
+
+            <EditText
+                android:id="@+id/password2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:drawableStart="@drawable/ic_password2_primary_24dp"
+                android:hint="@string/Confirm_password"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:maxLength="16" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="20dp" />
+
+            <Button
+                android:id="@+id/signup"
+                style="@style/Button.Background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/Sign_up" />
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

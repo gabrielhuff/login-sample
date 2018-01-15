@@ -1,0 +1,121 @@
+// Setup build script classpath
+
+buildscript {
+    ext.kotlinVersion = '1.1.61'
+    ext.springBootVersion = '2.0.0.M7'
+    repositories {
+        jcenter()
+        maven { url = uri "https://repo.spring.io/milestone" }
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+        classpath "gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8"
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.4"
+    }
+}
+
+// Apply plugins
+
+apply plugin: 'kotlin'
+apply plugin: "kotlin-spring"
+apply plugin: "kotlin-jpa"
+apply plugin: "org.springframework.boot"
+apply plugin: "de.fuerstenau.buildconfig"
+apply plugin: "com.bmuschko.docker-remote-api"
+apply plugin: "jacoco"
+
+// Define version
+
+version = "1.0"
+
+// Setup dependency repositories
+
+repositories {
+    jcenter()
+    maven { url = uri "https://repo.spring.io/milestone" }
+}
+
+// Set JVM targets
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
+
+// Setup Build Config constants
+
+buildConfig {
+
+    // Settings
+
+    packageName = "com.gabrielhuff.sample.login.server"
+
+    // Fields
+
+    // Note: Provide a 'jwtSigningKey' project property containing a 512-bit base64 encoded string in case you want to customize the JWT signing key
+    buildConfigField 'String', 'JWT_SIGNING_KEY', project.findProperty("jwtSigningKey") ?: "KkYtSmFOZFJnVWtYbjJyNXU4eC9BP0QoRytLYlBlU2hWbVlxM3M2djl5JEImRSlIQE1jUWZUalduWnI0dTd3IQ=="
+}
+
+// Setup Docker plugin
+// Note: Provide 'dockerHubUsername' and 'dockerHubPassword' project properties in order to push to DockerHub
+
+docker{
+    registryCredentials {
+        username = project.findProperty("dockerHubUsername")
+        password = project.findProperty("dockerHubPassword")
+    }
+}
+
+// Setup Docker flow. When running `pushImage`, we are:
+//
+// - Taking the app JAR and creating a Dockerfile that executes it
+// - Creating an image from the generated Dockerfile
+// - Pushing the created image to Docker Hub (this step requires credentials)
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+task dockerfile(type: Dockerfile) {
+    from 'openjdk:8'
+    maintainer 'Gabriel Huff'
+    exposePort 8080
+    addFile "${bootJar.archiveName}", '.'
+    entryPoint 'java', '-jar', "${bootJar.archiveName}"
+    instruction { "HEALTHCHECK --interval=5s CMD curl -I --fail http://localhost:8080/actuator/health || exit 1" }
+}
+
+task copyBootJarToDockerImageDirectory(type: Copy) {
+    dependsOn bootJar
+    from bootJar.archivePath
+    into dockerfile.destFile.parentFile
+}
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn dockerfile, copyBootJarToDockerImageDirectory, check
+    inputDir dockerfile.destFile.parentFile
+    tag = "gabrielhuff/sample-login:${project.version}"
+}
+
+task pushImage(type: DockerPushImage) {
+    dependsOn buildImage
+    conventionMapping.imageName = { buildImage.getTag() }
+}
+
+// Setup JaCoCo by generating a coverage report after testing
+
+test.finalizedBy jacocoTestReport
+
+// Setup dependencies
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "com.h2database:h2:1.4.196"
+    compile "io.jsonwebtoken:jjwt:0.9.0"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+}

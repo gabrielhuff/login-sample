@@ -1,0 +1,13 @@
+// Define global test task that tests everything
+
+task globalTest(group: 'verification') {
+
+    // Test app (mocked variant)
+    dependsOn ":app:createDarkGreenMockedDebugCoverageReport"
+
+    // Test app (local server variant)
+    dependsOn ":app:createLightGreenRealLocalServerDebugCoverageReport"
+
+    // Test server
+    dependsOn ":server:test"
+}

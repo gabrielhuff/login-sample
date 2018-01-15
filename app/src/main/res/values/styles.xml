@@ -1,0 +1,134 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Color of disabled elements, always overlaying the background color or itself -->
+    <attr name="colorDisable" format="color"/>
+
+    <style name="ActivityLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorDisable">@color/black_transparent</item>
+
+        <item name="android:colorPrimaryDark">?android:colorPrimary</item>
+        <item name="colorAccent">?android:colorPrimary</item>
+
+        <item name="android:fontFamily">@font/montserrat</item>
+
+        <item name="android:windowSoftInputMode">stateHidden</item>
+    </style>
+
+    <style name="ActivityDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:colorBackground">@color/grey_dark</item>
+        <item name="colorDisable">@color/white_transparent</item>
+
+        <item name="android:colorPrimaryDark">?android:colorPrimary</item>
+        <item name="colorAccent">?android:colorPrimary</item>
+
+        <item name="android:fontFamily">@font/montserrat</item>
+
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:windowSoftInputMode">stateHidden</item>
+
+    </style>
+
+    <style name="ActivityLight.BlueGrey">
+        <item name="android:colorPrimary">@color/blue_grey_dark</item>
+    </style>
+
+     <style name="ActivityLight.Cyan">
+        <item name="android:colorPrimary">@color/cyan_dark</item>
+    </style>
+
+    <style name="ActivityLight.Green">
+        <item name="android:colorPrimary">@color/green_dark</item>
+    </style>
+
+    <style name="ActivityLight.Indigo">
+        <item name="android:colorPrimary">@color/indigo_dark</item>
+    </style>
+
+    <style name="ActivityLight.Purple">
+        <item name="android:colorPrimary">@color/purple_dark</item>
+    </style>
+
+    <style name="ActivityLight.Teal">
+        <item name="android:colorPrimary">@color/teal_dark</item>
+    </style>
+
+    <style name="ActivityDark.BlueGrey">
+        <item name="android:colorPrimary">@color/blue_grey_light</item>
+    </style>
+
+    <style name="ActivityDark.Cyan">
+        <item name="android:colorPrimary">@color/cyan_light</item>
+    </style>
+
+    <style name="ActivityDark.Green">
+        <item name="android:colorPrimary">@color/green_light</item>
+    </style>
+
+    <style name="ActivityDark.Indigo">
+        <item name="android:colorPrimary">@color/indigo_light</item>
+    </style>
+
+    <style name="ActivityDark.Purple">
+        <item name="android:colorPrimary">@color/purple_light</item>
+    </style>
+
+    <style name="ActivityDark.Teal">
+        <item name="android:colorPrimary">@color/teal_light</item>
+    </style>
+
+    <style name="TextView"/>
+
+    <style name="TextView.Heading">
+        <item name="android:textColor">?android:colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextView.Heading.Inverse">
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:digits">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:background">@drawable/edit_text</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/button_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="Button.Inverse">
+        <item name="android:textColor">@color/button_text_inverse</item>
+    </style>
+
+    <style name="Button.Background">
+        <item name="android:background">@drawable/button_background</item>
+    </style>
+
+    <style name="Button.Inverse.Background">
+        <item name="android:background">@drawable/button_background_inverse</item>
+    </style>
+
+    <style name="Button.Flat">
+        <item name="android:background">@drawable/button_flat</item>
+    </style>
+
+    <style name="LoadingIndicator">
+        <item name="indicatorName">BallPulseIndicator</item>
+        <item name="indicatorColor">?android:colorPrimary</item>
+        <item name="maxHeight">32dp</item>
+        <item name="maxWidth">32dp</item>
+    </style>
+
+</resources>

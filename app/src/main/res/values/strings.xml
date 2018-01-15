@@ -1,0 +1,26 @@
+<resources>
+    <string name="Close">Close</string>
+    <string name="Confirm_password">Confirm password</string>
+    <string name="Credentials">Credentials</string>
+    <string name="Docker">Docker</string>
+    <string name="Error">Error</string>
+    <string name="Invalid_username_and_or_password">Invalid username and / or password</string>
+    <string name="Kotlin">Kotlin</string>
+    <string name="Log_out">Log out</string>
+    <string name="Login">Login</string>
+    <string name="login">login</string>
+    <string name="Login_Sample">Login Sample</string>
+    <string name="Password">Password</string>
+    <string name="Profile">Profile</string>
+    <string name="RxJava">RxJava</string>
+    <string name="sample">sample</string>
+    <string name="Sign_up">Sign up</string>
+    <string name="Skills">Skills</string>
+    <string name="There_was_a_problem_when_logging_in_Try_again_in_a_few_seconds">There was a problem when logging in. Try again in a few seconds.</string>
+    <string name="There_was_a_problem_when_signing_up_Try_again_in_a_few_seconds">There was a problem when signing up. Try again in a few seconds.</string>
+    <string name="Theres_no_active_network_connection">There\'s no active network connection</string>
+    <string name="This_username_is_not_available">This username is not available</string>
+    <string name="Username">Username</string>
+    <string name="You_are_logged_in_Since_this_is_a_mere_sample_theres_not_much_to_do_here_But_hey_it_works">You are logged in! Since this is a mere sample, there\'s not much to do here. But hey, it works!</string>
+    <string name="Mismatch">Mismatch</string>
+</resources>

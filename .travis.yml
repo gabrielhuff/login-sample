@@ -1,0 +1,37 @@
+sudo: required
+
+language: android
+
+services:
+  - docker
+
+android:
+
+  components:
+  - tools
+  - platform-tools
+  - tools
+  - build-tools-26.0.2
+  - android-26
+  - android-21
+  - extra-android-m2repository
+  - sys-img-armeabi-v7a-android-21
+
+  licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
+before_install:
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - emulator -avd test -no-window &
+
+install:
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
+
+before_script:
+  - ./gradlew clean
+
+script:
+  - ./gradlew globalTest --stacktrace
