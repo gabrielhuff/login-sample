@@ -10,7 +10,7 @@ A simple Android app that allows users to sign up / login / logout.
 
 ### Android
 
-- Combining **Gradle** and **Docker** to have better control over client-service communication. Take a look at the Gradle [setup](app/build.gradle#L138).
+- Combining **Gradle** and **Docker** to have better control over client-service communication. Take a look at the Gradle [setup](app/build.gradle#L138). For more details about how this is working on this sample, check this [post on Medium](https://medium.com/@gabrielhuff/where-android-and-docker-meet-a2a34130a504).
 - Using **RxJava** reactive streams to implement objects with complex life cycles in a clean way. As an example, check out the [login screen implementation](app/src/main/kotlin/com/gabrielhuff/sample/login/activity/LoginActivity.kt).
 - Writing readable functional tests with **Espresso**. See how we are testing scenarios in which the [user is not registered](app/src/androidTest/kotlin/com/gabrielhuff/sample/login/test/functional/UnregisteredUserTest.kt).
 - Writing better code with **Kotlin**. See the [app source code](app/src/main/kotlin/com/gabrielhuff/sample/login).
