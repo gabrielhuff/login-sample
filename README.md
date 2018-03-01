@@ -10,17 +10,17 @@ A simple Android app that allows users to sign up / login / logout.
 
 ### Android
 
-- Combining **Gradle** and **Docker** to have better control over client-service communication. Take a look at the Gradle [setup](app/build.gradle#L150).
-- Using **RxJava** reactive streams to implement objects with complex lifecycles in a clean way. Take a look at the [login screen implementation](app/src/main/kotlin/com/gabrielhuff/sample/login/activity/LoginActivity.kt).
-- Writing readable functional tests with **Espresso**. Check out the [test classes](app/src/androidTest/kotlin/com/gabrielhuff/sample/login/test/functional).
-- Writing better code with **Kotlin**. See the [source code](app/src/main/kotlin/com/gabrielhuff/sample/login).
+- Combining **Gradle** and **Docker** to have better control over client-service communication. Take a look at the Gradle [setup](app/build.gradle#L138).
+- Using **RxJava** reactive streams to implement objects with complex life cycles in a clean way. As an example, check out the [login screen implementation](app/src/main/kotlin/com/gabrielhuff/sample/login/activity/LoginActivity.kt).
+- Writing readable functional tests with **Espresso**. See how we are testing scenarios in which the [user is not registered](app/src/androidTest/kotlin/com/gabrielhuff/sample/login/test/functional/UnregisteredUserTest.kt).
+- Writing better code with **Kotlin**. See the [app source code](app/src/main/kotlin/com/gabrielhuff/sample/login).
 
 ### Backend
 
-- Creating reactive server applications with Spring **WebFlux** and **Reactor**. See the [app class](server/src/main/kotlin/com/gabrielhuff/sample/login/server/app.kt).
-- Using **Gradle** to automate **Docker** related tasks, such as wrapping the server application in images and pushing these images to remote registries. Take a look at the Gradle [setup](server/build.gradle#L77).
-- Writing readable functional tests using Spring's `WebTestClient`. Check out the server [test package](server/src/test/kotlin/com/gabrielhuff/sample/login/server).
-- More **Kotlin**. See the [source code](server/src/main/kotlin).
+- Creating reactive server applications with Spring **WebFlux** and **Reactor**. See the [app class](server/src/main/kotlin/com.gabrielhuff.sample.login.server/app.kt).
+- Using **Gradle** to automate **Docker** related tasks, such as wrapping the server application in images and pushing these images to remote registries. Take a look at the Gradle [setup](server/build.gradle#L71).
+- Writing readable functional tests using Spring's `WebTestClient`. Check out how we are [testing user registration](server/src/test/kotlin/com/gabrielhuff/sample/login/server/PostUserTest.kt).
+- More **Kotlin**. See the [server source code](server/src/main/kotlin).
 
 ## Understanding the code
 
@@ -28,6 +28,8 @@ The project consists of a Gradle multi-project with 2 projects:
 
 - `app`: The Android client application
 - `server`: The server application
+
+Both communicate through a common [API](API.md).
 
 ### `app` project
 
